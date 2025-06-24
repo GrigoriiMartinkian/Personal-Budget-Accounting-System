@@ -1,6 +1,6 @@
 package com.example.financeproject.controller;
 import com.example.financeproject.dto.CategoryDto;
-import com.example.financeproject.services.category.CategoryService;
+import com.example.financeproject.services.category.impl.CategoryServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private final CategoryService categoryService;
+    private final CategoryServiceImpl categoryService;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryServiceImpl categoryService) {
         this.categoryService = categoryService;
     }
 
@@ -20,7 +20,7 @@ public class CategoryController {
         CategoryDto savedCategory = categoryService.addCategoryToAccount(categoryDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }
-    @PutMapping("/{id}")
+    @PutMapping("/edit_category/{id}")
     public ResponseEntity<CategoryDto> editCategory(
             @PathVariable Long id, @RequestBody CategoryDto categoryDto) {
 
@@ -29,7 +29,7 @@ public class CategoryController {
 
     }
 
-    @DeleteMapping("/{Id}")
+    @DeleteMapping("delete_category/{Id}")
     public ResponseEntity<String> deleteUserCategory(@PathVariable Long Id) {
         categoryService.deleteUserCategory(Id);
         return ResponseEntity.ok("Категория успешно удалена");

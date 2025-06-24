@@ -1,6 +1,6 @@
 package com.example.financeproject.models;
 
-public enum CategoryType {
+public enum     CategoryType {
     INCOME,
     EXPENSE
 }
