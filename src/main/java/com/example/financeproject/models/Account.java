@@ -1,12 +1,9 @@
 package com.example.financeproject.models;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +21,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;               // имя аккаунта
+    private String name;               // имя счета
     private String accountNumber;      // номер счета
     private BigDecimal balance;        // баланс
     private LocalDateTime balanceDate=LocalDateTime.now();     // дата баланса
@@ -36,6 +33,7 @@ public class Account {
     private Currency currency;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    //@JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)

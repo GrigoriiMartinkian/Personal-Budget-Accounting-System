@@ -1,5 +1,6 @@
 package com.example.financeproject.models;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -25,18 +27,25 @@ public class Transaction {
     private BigDecimal amount;
 
     @ManyToOne
-    @JoinColumn(name = "default_category_id")
+    @JoinColumn(name = "default_category_id", nullable = true)
     private DefaultCategory defaultCategory; // Дефолтная категория (если выбрана)
 
     @ManyToOne
     @JoinColumn(name = "user_category_id")
     private Category userCategory; // Пользовательская категория (если выбрана)
 
-    private LocalDate date;
+    @Builder.Default
+    private  LocalDateTime date= LocalDateTime.now();
 
     private String description;
 
-
+//    public Transaction (Account account, DefaultCategory defaultCategory, Category userCategory, String description) {
+//        this.account = account;
+//        this.defaultCategory = defaultCategory;
+//        this.userCategory = userCategory;
+//        this.description = description;
+//
+//    }
 }
 
 
