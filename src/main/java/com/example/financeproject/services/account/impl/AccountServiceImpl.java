@@ -1,7 +1,10 @@
 package com.example.financeproject.services.account.impl;
 
-import com.example.financeproject.dto.AccountDto;
+import com.example.financeproject.dto.dtoAccount.AccountDto;
 
+import com.example.financeproject.dto.dtoAccount.AccountToTransferDto;
+import com.example.financeproject.dto.dtoAccount.GetAccountDto;
+import com.example.financeproject.dto.dtoAccount.UpdateAccountDto;
 import com.example.financeproject.mappers.AccountMapper;
 import com.example.financeproject.models.*;
 import com.example.financeproject.repositories.account.AccountRepository;
@@ -15,13 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
-
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
@@ -42,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Transactional
-    public Account createAccount(AccountDto dto) {
+    public AccountDto createAccount(AccountDto dto) {
 
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -52,7 +54,8 @@ public class AccountServiceImpl implements AccountService {
         account.setUser(user);
         account.setAccountNumber(generateAccountNumber(dto));
 
-        return accountRepository.save(account);
+
+        return accountMapper.toDto(accountRepository.save(account));
     }
 
     @Transactional
@@ -64,7 +67,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Transactional
-    public AccountDto editAccount(Long id, AccountDto dto) {
+    public UpdateAccountDto editAccount(Long id, UpdateAccountDto dto) {
 
         Account account = accountRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
@@ -78,27 +81,23 @@ public class AccountServiceImpl implements AccountService {
             account.setType(dto.getType());
 
         }
-        if (dto.getCode() != null && dto.getExchangeRate() != null) {
-            account.setCurrency(new Currency(dto.getCode(), dto.getExchangeRate()));
-        }
 
         Account updated = accountRepository.save(account);
-        return accountMapper.toDto(updated);
+        return accountMapper.toUpdateAccountDto(updated);
     }
 
     @Transactional
-    public List<AccountDto> getAllAccounts(Long userId) {
+    public List<GetAccountDto> getAllAccounts(Long userId) {
         List<Account> accounts = accountRepository.findAllByUserId(userId);
-
-
         if (accounts.isEmpty()) {
             throw new EntityNotFoundException("Accounts not found");
         }
 
-        System.out.println("До маппинга: категории первого аккаунта = " + accounts.get(0).getCategories().size());
+
+
         return accounts.stream()
                 .peek(account -> account.getCategories().size()) // принудительно инициализируем
-                .map(accountMapper::toDto)
+                .map(accountMapper::toGetAccountDto)
                 .toList();
 
     }
@@ -150,6 +149,26 @@ public class AccountServiceImpl implements AccountService {
 
         return finalBuilder.toString();
 
+
+    }
+
+    public AccountToTransferDto transferMoneyB( AccountToTransferDto accountToTransfer){
+
+        Account accountSender=accountRepository.findById(accountToTransfer.getIdSender())
+                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
+
+        Account accountReceiver=accountRepository.findById(accountToTransfer.getIdReceiver())
+                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
+
+        accountSender.setBalance(accountSender.getBalance().subtract(accountToTransfer.getAmount()));
+        accountToTransfer.setBalanceReceiver(accountSender.getBalance().subtract(accountToTransfer.getAmount()));
+        accountRepository.save(accountSender);
+
+
+        accountReceiver.setBalance(accountReceiver.getBalance().add(accountToTransfer.getAmount()));
+        accountToTransfer.setBalanceReceiver(accountReceiver.getBalance().add(accountToTransfer.getAmount()));
+        accountRepository.save(accountReceiver);
+        return accountToTransfer;
 
     }
 

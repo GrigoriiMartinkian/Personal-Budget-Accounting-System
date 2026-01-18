@@ -1,6 +1,8 @@
 package com.example.financeproject.services.category.impl;
 
-import com.example.financeproject.dto.CategoryDto;
+import com.example.financeproject.dto.dtoCategory.CategoryDto;
+import com.example.financeproject.dto.dtoCategory.GetCategoryDto;
+import com.example.financeproject.dto.dtoCategory.UpdateCategoryDto;
 import com.example.financeproject.mappers.CategoryMapper;
 import com.example.financeproject.models.Account;
 import com.example.financeproject.models.Category;
@@ -8,19 +10,22 @@ import com.example.financeproject.repositories.account.AccountRepository;
 import com.example.financeproject.repositories.category.CategoryRepository;
 import com.example.financeproject.services.category.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    private final CategoryRepository categoryRepository;
 
+    private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     private final AccountRepository accountRepository;
 
 
-    @Autowired
+
     public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper, AccountRepository accountRepository) {
         this.categoryRepository = categoryRepository;
         this.accountRepository = accountRepository;
@@ -57,6 +62,39 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(category);
     }
 
+    @Transactional
+    public List<GetCategoryDto> getAllCategories(Long accountId) {
+        List<Category> categories=categoryRepository.getAllByAccountId(accountId);
+        if (categories.isEmpty()) {
+            throw new EntityNotFoundException("Category not found");
+        }
+
+        return categoryMapper.toGetCategoryDtoList(categories);
+    }
+
+    @Transactional
+    public void deleteCategoryFromAccount( Long categoryId) {
+       Category category=categoryRepository.findById(categoryId)
+               .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+       categoryRepository.delete(category);
+    }
+
+    @Transactional
+   public UpdateCategoryDto updateCategory(Long categoryId,  UpdateCategoryDto categoryDto){
+       Category category=categoryRepository.findById(categoryId)
+               .orElseThrow(() -> new EntityNotFoundException("Category not found"));
+       if(categoryDto.getName()!=null){
+           category.setName(categoryDto.getName());
+       }
+       if(categoryDto.getType()!=null){
+           category.setType(categoryDto.getType());
+       }
+       Category updatedCategory=categoryRepository.save(category);
+
+
+       return categoryMapper.toUpdateCategoryDto(updatedCategory);
+
+    }
 
 }
 

@@ -1,5 +1,4 @@
-package com.example.financeproject.exeption;
-
+package com.example.financeproject.exception;
 
 import com.example.financeproject.dto.ErrorResponseDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -9,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.webjars.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -58,17 +58,36 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDto> handleAllExceptions(Exception ex) {
-        ErrorResponseDto response = new ErrorResponseDto(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                "Произошла непредвиденная ошибка"
-        );
-        return ResponseEntity.internalServerError().body(response);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponseDto> handleAllExceptions(Exception ex) {
+//        ErrorResponseDto response = new ErrorResponseDto(
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                "Internal Server Error",
+//                "Произошла непредвиденная ошибка"
+//        );
+//        return ResponseEntity.internalServerError().body(response);
+//    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<Map<String, String>> handleAll(Exception ex) {
+//        Map<String, String> error = new HashMap<>();
+//        error.put("error", "Internal Server Error");
+//        error.put("message", ex.getMessage());
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+//    }
+@ExceptionHandler(NotFoundException.class)
+public ResponseEntity<String> handleNotFound(NotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+}
 
 
+
+
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<String> handle(Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
+        }
 
 
 
