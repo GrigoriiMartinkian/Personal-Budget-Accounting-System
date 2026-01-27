@@ -1,6 +1,5 @@
 package com.example.financeproject.models;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,13 +38,7 @@ public class Transaction {
 
     private String description;
 
-//    public Transaction (Account account, DefaultCategory defaultCategory, Category userCategory, String description) {
-//        this.account = account;
-//        this.defaultCategory = defaultCategory;
-//        this.userCategory = userCategory;
-//        this.description = description;
-//
-//    }
+
 }
 
 

@@ -13,7 +13,6 @@ import java.util.Arrays;
 @Builder
 @Entity
 @Data
-
 public class DefaultCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

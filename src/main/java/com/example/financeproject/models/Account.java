@@ -1,5 +1,5 @@
 package com.example.financeproject.models;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,7 +24,7 @@ public class Account {
     private String name;               // имя счета
     private String accountNumber;      // номер счета
     private BigDecimal balance;        // баланс
-    private LocalDateTime balanceDate=LocalDateTime.now();     // дата баланса
+    private LocalDateTime balanceDate;     // дата баланса
 
     @Enumerated(EnumType.STRING)
     private AccountType type;          // CASH, DEPOSIT, CREDIT_CARD
@@ -51,6 +51,27 @@ public class Account {
         this.currency = currency;
         this.user = user;
 
+    }
+
+    @PrePersist
+    public void onCreate(){
+        this.balanceDate = LocalDateTime.now();
+    }
+    public void withdraw(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+        if (balance.compareTo(amount) < 0) {
+            throw new IllegalStateException("Not enough money");
+        }
+        balance = balance.subtract(amount);
+    }
+
+    public void deposit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+        balance = balance.add(amount);
     }
 
 

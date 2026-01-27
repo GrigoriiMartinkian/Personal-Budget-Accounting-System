@@ -1,6 +1,7 @@
 package com.example.financeproject.dto.dtoUser;
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerifyDto {
+    @NotBlank
     private String username;
+    @NotBlank
     private String password;
 }

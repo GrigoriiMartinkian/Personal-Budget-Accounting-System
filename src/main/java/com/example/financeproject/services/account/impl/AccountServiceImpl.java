@@ -1,40 +1,37 @@
 package com.example.financeproject.services.account.impl;
 
-import com.example.financeproject.dto.dtoAccount.AccountDto;
-
-import com.example.financeproject.dto.dtoAccount.AccountToTransferDto;
-import com.example.financeproject.dto.dtoAccount.GetAccountDto;
-import com.example.financeproject.dto.dtoAccount.UpdateAccountDto;
+import com.example.financeproject.dto.dtoAccount.*;
 import com.example.financeproject.mappers.AccountMapper;
 import com.example.financeproject.models.*;
 import com.example.financeproject.repositories.account.AccountRepository;
+import com.example.financeproject.repositories.transaction.AccountTransactionRepository;
 import com.example.financeproject.repositories.user.UserRepository;
-
 import com.example.financeproject.services.account.AccountService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
 @Service
 public class AccountServiceImpl implements AccountService {
-
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
     private final AccountMapper accountMapper;
+    private final AccountTransactionRepository accountTransactionRepository;
 
 
-    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, AccountMapper accountMapper) {
+    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository, AccountMapper accountMapper, AccountTransactionRepository accountTransactionRepository) {
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
         this.accountMapper = accountMapper;
+        this.accountTransactionRepository = accountTransactionRepository;
     }
 
     public AccountDto getAccountById(Long accountId) {
@@ -49,7 +46,13 @@ public class AccountServiceImpl implements AccountService {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
+        if ("PLN".equals(dto.getCode()) &&
+                dto.getExchangeRate().compareTo(BigDecimal.ONE) != 0) {
 
+            throw new IllegalArgumentException(
+                    "Exchange rate for PLN must be 1.0"
+            );
+        }
         Account account = accountMapper.toEntity(dto);
         account.setUser(user);
         account.setAccountNumber(generateAccountNumber(dto));
@@ -94,19 +97,12 @@ public class AccountServiceImpl implements AccountService {
         }
 
 
-
         return accounts.stream()
                 .peek(account -> account.getCategories().size()) // принудительно инициализируем
                 .map(accountMapper::toGetAccountDto)
                 .toList();
 
     }
-
-
-
-
-
-
 
     private String generateAccountNumber(AccountDto dto) {
 
@@ -152,24 +148,39 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
-    public AccountToTransferDto transferMoneyB( AccountToTransferDto accountToTransfer){
+    @Transactional
+    public TransferResponseDto transfer(TransferRequestDto dto) {
 
-        Account accountSender=accountRepository.findById(accountToTransfer.getIdSender())
+        Account from = accountRepository.findById(dto.getFromAccountId())
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
-        Account accountReceiver=accountRepository.findById(accountToTransfer.getIdReceiver())
+        Account to = accountRepository.findById(dto.getToAccountId())
                 .orElseThrow(() -> new EntityNotFoundException("Account not found"));
 
-        accountSender.setBalance(accountSender.getBalance().subtract(accountToTransfer.getAmount()));
-        accountToTransfer.setBalanceReceiver(accountSender.getBalance().subtract(accountToTransfer.getAmount()));
-        accountRepository.save(accountSender);
+        if (from.getId().equals(to.getId())) {
+            throw new IllegalArgumentException("Cannot transfer to the same account");
+        }
 
+        from.withdraw(dto.getAmount());
+        to.deposit(dto.getAmount());
 
-        accountReceiver.setBalance(accountReceiver.getBalance().add(accountToTransfer.getAmount()));
-        accountToTransfer.setBalanceReceiver(accountReceiver.getBalance().add(accountToTransfer.getAmount()));
-        accountRepository.save(accountReceiver);
-        return accountToTransfer;
+        AccountTransaction tx = new AccountTransaction();
+        tx.setFrom(from);
+        tx.setTo(to);
+        tx.setAmount(dto.getAmount());
+        tx.setCreatedAt(LocalDateTime.now());
+        tx.setDescription(dto.getDescription());
 
+        accountTransactionRepository.save(tx);
+        accountRepository.save(from);
+        accountRepository.save(to);
+
+        return new TransferResponseDto(
+                from.getBalance(),
+                to.getBalance(),
+                tx.getCreatedAt(),
+                dto.getAmount()
+        );
     }
 
 

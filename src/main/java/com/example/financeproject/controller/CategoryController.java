@@ -4,6 +4,7 @@ import com.example.financeproject.dto.dtoCategory.GetCategoryDto;
 import com.example.financeproject.dto.dtoCategory.UpdateCategoryDto;
 import com.example.financeproject.services.category.CategoryService;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody CategoryDto categoryDto) {
         CategoryDto savedCategory = categoryService.addCategoryToAccount(categoryDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
     }

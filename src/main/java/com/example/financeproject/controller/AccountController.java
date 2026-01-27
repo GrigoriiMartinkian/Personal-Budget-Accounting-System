@@ -1,20 +1,13 @@
 package com.example.financeproject.controller;
 
 
-import com.example.financeproject.dto.dtoAccount.AccountToTransferDto;
-import com.example.financeproject.dto.dtoAccount.GetAccountDto;
-import com.example.financeproject.dto.dtoAccount.UpdateAccountDto;
+import com.example.financeproject.dto.dtoAccount.*;
 
 import com.example.financeproject.services.account.AccountService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.apache.catalina.filters.ExpiresFilter;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.financeproject.dto.dtoAccount.AccountDto;
 
 import java.util.List;
 
@@ -25,14 +18,13 @@ public class AccountController {
 
     private final AccountService accountService;
 
-    //
+
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
-
     }
 
     @PostMapping
-    public ResponseEntity<AccountDto> createAccount(@RequestBody AccountDto dto) {
+    public ResponseEntity<AccountDto> createAccount(@Valid @RequestBody AccountDto dto) {
         AccountDto createdAccount = accountService.createAccount(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAccount);
@@ -57,11 +49,10 @@ public class AccountController {
     }
 
     @PatchMapping("/transfer")
-    public ResponseEntity<String> transferMoneyBetween(@RequestBody AccountToTransferDto accountToTransfer) {
+    public ResponseEntity<TransferResponseDto> transferMoneyBetween(@Valid @RequestBody TransferRequestDto transferRequestDto) {
 
-        accountService.transferMoneyB(accountToTransfer);
-        return ResponseEntity.ok("Account successfully Edited");
 
+        return ResponseEntity.ok().body(accountService.transfer(transferRequestDto));
     }
 
 

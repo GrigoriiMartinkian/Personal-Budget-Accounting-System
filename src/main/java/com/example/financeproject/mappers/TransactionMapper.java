@@ -7,7 +7,7 @@ import com.example.financeproject.models.Transaction;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import java.util.List;
+
 
 @Mapper(componentModel = "spring", uses = {AccountMapper.class, CategoryMapper.class} )
 public interface TransactionMapper {

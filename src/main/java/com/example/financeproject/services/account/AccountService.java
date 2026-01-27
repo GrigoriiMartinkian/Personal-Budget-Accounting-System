@@ -1,12 +1,8 @@
 package com.example.financeproject.services.account;
 
-import com.example.financeproject.dto.dtoAccount.AccountDto;
+import com.example.financeproject.dto.dtoAccount.*;
 
-import com.example.financeproject.dto.dtoAccount.AccountToTransferDto;
-import com.example.financeproject.dto.dtoAccount.GetAccountDto;
-import com.example.financeproject.dto.dtoAccount.UpdateAccountDto;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface AccountService {
@@ -21,7 +17,7 @@ public interface AccountService {
 
     List<GetAccountDto> getAllAccounts(Long userId);
 
-    AccountToTransferDto transferMoneyB(AccountToTransferDto accountsToTransfer);
+    TransferResponseDto transfer(TransferRequestDto dto);
 
 
 
