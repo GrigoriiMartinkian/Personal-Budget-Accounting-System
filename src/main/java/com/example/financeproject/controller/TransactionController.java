@@ -2,10 +2,11 @@ package com.example.financeproject.controller;
 
 
 import com.example.financeproject.dto.dtoTransaction.TransactionDto;
-import com.example.financeproject.dto.dtoTransaction.TransactionExpenseSDto;
+import com.example.financeproject.dto.dtoTransaction.TransactionExpenseDto;
 import com.example.financeproject.dto.dtoTransaction.TransactionFilterDto;
 import com.example.financeproject.dto.dtoTransaction.UpdateTransactionDto;
 import com.example.financeproject.services.transaction.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
     @PostMapping
-    public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transactionDto) {
+    public ResponseEntity<TransactionDto> createTransaction(@Valid @RequestBody TransactionDto transactionDto) {
         return ResponseEntity.
                 status(HttpStatus.CREATED).body(transactionService.addTransaction(transactionDto));
     }
@@ -66,7 +67,7 @@ public class TransactionController {
     }
 
     @GetMapping("/expenses_summary")
-    public List<TransactionExpenseSDto> getExpensesSummary(
+    public List<TransactionExpenseDto> getExpensesSummary(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Long defaultCategoryId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,

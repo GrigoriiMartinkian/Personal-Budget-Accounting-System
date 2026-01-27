@@ -4,12 +4,16 @@ import com.example.financeproject.dto.dtoTransaction.TransactionFilterDto;
 import com.example.financeproject.models.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface TransactionRepository extends JpaRepository<Transaction, Long>, JpaSpecificationExecutor<Transaction> {
-    List<Transaction> findAllByAccountId(Long accountId);
+public interface TransactionRepository extends
+        JpaRepository<Transaction, Long>,
+        JpaSpecificationExecutor<Transaction>,
+        QuerydslPredicateExecutor<Transaction> {
 
+    List<Transaction> findAllByAccountId(Long accountId);
 }

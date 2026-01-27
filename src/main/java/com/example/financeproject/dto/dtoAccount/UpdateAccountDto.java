@@ -14,12 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateAccountDto {
-
-    private Long id;
     private String name;
     private BigDecimal balance;
     private LocalDateTime balanceDate=LocalDateTime.now();
     private AccountType type;
-
-
 }

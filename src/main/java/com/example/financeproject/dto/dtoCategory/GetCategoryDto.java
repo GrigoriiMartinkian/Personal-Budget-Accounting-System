@@ -16,6 +16,6 @@ public class GetCategoryDto {
 
     private String name;
 
-    private CategoryType type; // Указываем, доход это или расход
+    private CategoryType type;
 
 }

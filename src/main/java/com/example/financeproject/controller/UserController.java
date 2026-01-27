@@ -4,9 +4,8 @@ import com.example.financeproject.dto.dtoUser.UserDto;
 import com.example.financeproject.dto.dtoUser.UserReturnDto;
 import com.example.financeproject.dto.dtoUser.UserUpdateDto;
 import com.example.financeproject.dto.dtoUser.VerifyDto;
-import com.example.financeproject.models.User;
 import com.example.financeproject.services.user.UserService;
-import com.example.financeproject.services.user.UserServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserReturnDto> register(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserReturnDto> register(@Valid @RequestBody UserDto userDto) {
       return ResponseEntity.status(HttpStatus.CREATED).
               body(userService.addUser(userDto));
     }

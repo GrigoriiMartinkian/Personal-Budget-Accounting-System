@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 public class ErrorResponseDto {
-    private int status;         // HTTP-код (404, 500 и т.д.)
-    private String error;       // Тип ошибки ("Not Found")
-    private String message;     // Детализация ("Category with id 5 not found")
+    private int status;
+    private String error;
+    private String message;
     private LocalDateTime timestamp = LocalDateTime.now();
     public ErrorResponseDto(int status, String error, String message) {
         this.status = status;
