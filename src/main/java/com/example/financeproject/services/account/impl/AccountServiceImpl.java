@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
+
 @Service
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
@@ -95,7 +96,6 @@ public class AccountServiceImpl implements AccountService {
         if (accounts.isEmpty()) {
             throw new EntityNotFoundException("Accounts not found");
         }
-
 
         return accounts.stream()
                 .peek(account -> account.getCategories().size()) // принудительно инициализируем
@@ -182,6 +182,8 @@ public class AccountServiceImpl implements AccountService {
                 dto.getAmount()
         );
     }
+
+
 
 
 }

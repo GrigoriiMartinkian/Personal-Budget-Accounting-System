@@ -5,6 +5,7 @@ import com.example.financeproject.models.AccountType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AccountDto {
 
     private Long id;
@@ -34,7 +36,7 @@ public class AccountDto {
     @Digits(integer = 10, fraction = 2)
     private BigDecimal balance;
 
-    @NotBlank(message = "Account type is required")
+    @NotNull(message = "Account type is required")
     private AccountType type;
 
     @NotBlank(message = "Currency code is required")
@@ -48,8 +50,6 @@ public class AccountDto {
     @DecimalMin(value = "0.000001", inclusive = true,
             message = "Exchange rate must be greater than 0")
     private BigDecimal exchangeRate;
-
-    private List<CategoryDto> categories = new ArrayList<>();
 
 
 }
