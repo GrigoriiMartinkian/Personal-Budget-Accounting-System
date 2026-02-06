@@ -29,7 +29,7 @@ public class AccountDto {
     private Long userId;
 
     @NotBlank(message = "name must exist ")
-    @Size(min = 6, max = 30, message = "The username must contain between 6 and 30 characters.")
+    @Size(min = 3, max = 30, message = "The name must contain between 3 and 30 characters.")
     private String name;
 
     @Min(value = 0, message = "The value must be non-negative")

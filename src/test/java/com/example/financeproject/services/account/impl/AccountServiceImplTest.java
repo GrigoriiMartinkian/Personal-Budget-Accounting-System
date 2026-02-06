@@ -397,6 +397,16 @@ class AccountServiceImplTest {
                 accountService.getAllAccounts(userId));
         verify(accountMapper, never()).toGetAccountDto(any(Account.class));
     }
+    @Test
+    void getAllAccountsShouldThrow_whenUserNotFound() {
+        Long userId = 1L;
+
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () ->
+                accountService.getAllAccounts(userId));
+        verify(accountMapper, never()).toGetAccountDto(any(Account.class));
+    }
 
     //Transfer
     @Test
