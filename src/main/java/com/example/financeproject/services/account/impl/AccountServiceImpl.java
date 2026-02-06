@@ -92,7 +92,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     public List<GetAccountDto> getAllAccounts(Long userId) {
-        List<Account> accounts = accountRepository.findAllByUserId(userId);
+        User user=userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        List<Account> accounts = accountRepository.findAllByUserId(user.getId());
         if (accounts.isEmpty()) {
             throw new EntityNotFoundException("Accounts not found");
         }

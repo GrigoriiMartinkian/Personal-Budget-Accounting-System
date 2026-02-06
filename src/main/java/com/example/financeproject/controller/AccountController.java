@@ -45,13 +45,11 @@ public class AccountController {
     @GetMapping("/get_all/{userId}")
     public ResponseEntity<List<GetAccountDto>> getAllAccounts(@PathVariable Long userId) {
         List<GetAccountDto> accounts = accountService.getAllAccounts(userId);
-        return ResponseEntity.status(HttpStatus.FOUND).body(accounts);
+        return ResponseEntity.ok().body(accounts);
     }
 
     @PatchMapping("/transfer")
     public ResponseEntity<TransferResponseDto> transferMoneyBetween(@Valid @RequestBody TransferRequestDto transferRequestDto) {
-
-
         return ResponseEntity.ok().body(accountService.transfer(transferRequestDto));
     }
 
