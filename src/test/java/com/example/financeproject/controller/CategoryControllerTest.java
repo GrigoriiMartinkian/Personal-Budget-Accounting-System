@@ -28,14 +28,5 @@ class CategoryControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
-    void successAddCategory() throws Exception {
-       CategoryDto categoryDto =  CategoryDto
-               .builder()
-               .name("Gambling")
-               .type(EXPENSE)
-               .accountId(1L)
-               .build();
-    }
 
 }

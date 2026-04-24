@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - finance-network
+
+  mysql:
+    image: mysql:8
+    environment:
+      ***: 12345678
+      MYSQL_DATABASE: finance-project
+      MYSQL_USER: username
+      ***: 12345678
+    ports:
+      - "3307:3306"
+    networks:
+      - finance-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+
+networks:
+  finance-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
