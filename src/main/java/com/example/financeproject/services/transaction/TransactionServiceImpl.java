@@ -136,35 +136,6 @@ public class TransactionServiceImpl implements TransactionService {
                 .toList();
     }
 
-//    public List<TransactionExpenseDto> getExpensesSummary(TransactionFilterDto filter) {
-//        QTransaction t = QTransaction.transaction;
-//
-//        return queryFactory
-//                .select(Projections.constructor(TransactionExpenseDto.class,
-//                        t.userCategory.name,
-//                        t.amount.sum(),
-//                        t.defaultCategory.id,
-//                        t.userCategory.id,
-//                        t.date
-//
-//                ))
-////        private String name;
-////        private BigDecimal amount;
-////        private Long defaultCategoryId;
-////        private Long categoryId;
-////        private LocalDateTime date;
-//                .from(t)
-//                .where(
-//
-//                        filter.getCategoryId() != null ? t.userCategory.id.eq(filter.getCategoryId()) : null,
-//                        filter.getMinAmount() != null ? t.amount.goe(filter.getMinAmount()) : null,
-//                        filter.getMaxAmount() != null ? t.amount.loe(filter.getMaxAmount()) : null,
-//                        filter.getDateFrom() != null ? t.date.goe(filter.getDateFrom().atStartOfDay()) : null,
-//                        filter.getDateTo() != null ? t.date.loe(filter.getDateTo().atTime(23, 59, 59)) : null
-//                )
-//                .groupBy(t.userCategory.name)
-//                .fetch();
-//    }
 public List<TransactionExpenseDto> getExpensesSummary(TransactionFilterDto filter) {
     QTransaction t = QTransaction.transaction;
 

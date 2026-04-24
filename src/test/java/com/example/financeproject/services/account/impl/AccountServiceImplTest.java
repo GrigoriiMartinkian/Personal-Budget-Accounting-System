@@ -144,7 +144,7 @@ class AccountServiceImplTest {
 
         verify(accountRepository).save(argThat(acc ->
                 acc.getAccountNumber() != null && acc.getAccountNumber().length() == 15
-        ));//
+        ));
 
         assertNotNull(result);
         assertEquals(accountDto, result);

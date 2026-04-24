@@ -9,9 +9,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 @Builder
 @Data
 @Entity
-
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

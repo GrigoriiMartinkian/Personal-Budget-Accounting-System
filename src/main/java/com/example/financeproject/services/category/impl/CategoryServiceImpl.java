@@ -12,7 +12,7 @@ import com.example.financeproject.services.category.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import java.util.List;
 
@@ -44,23 +44,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryMapper.toDto(savedCategory);
     }
 
-    @Transactional
-    public CategoryDto editCategoryFromAccount(Long categoryId, CategoryDto categoryDto) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Account not found"));
-        category.setName(categoryDto.getName());
-        category.setType(categoryDto.getType());
-        Category editCategory =categoryRepository.save(category);
-       return  categoryMapper.toDto(editCategory);
-    }
-
-    @Transactional
-    public void deleteUserCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("Category not found"));
-
-        categoryRepository.delete(category);
-    }
 
     @Transactional
     public List<GetCategoryDto> getAllCategories(Long accountId) {

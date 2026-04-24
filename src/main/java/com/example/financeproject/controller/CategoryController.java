@@ -30,7 +30,7 @@ public class CategoryController {
     @GetMapping("/get_all/{accountId}")
     public ResponseEntity<List<GetCategoryDto>> getAllCategories(@PathVariable Long accountId){
         List<GetCategoryDto> dto=categoryService.getAllCategories(accountId);
-        return ResponseEntity.status(HttpStatus.FOUND).body(dto);
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/delete_category/{categoryId}")
