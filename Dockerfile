@@ -1,3 +1,3 @@
 FROM openjdk:22-jdk
-ADD target/finance-project.jar finance-project.jar
-ENTRYPOINT ["java", "-jar", "/finance-project.jar"]
+COPY target/finance-project.jar app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]

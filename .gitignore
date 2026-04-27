@@ -31,3 +31,26 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Logs ###
+*.log
+
+### Env ###
+.env
+.env.*
+
+### Secrets ###
+application-local.properties
+application-secret.properties
+application-dev.properties
+application.properties
+
+### Docker volumes ###
+mysql-data/
+postgres-data/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+
